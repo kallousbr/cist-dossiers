@@ -42,7 +42,7 @@ body::before{
 
 /* Scanner vertical */
 .scan{
-    position:absolute;
+    position:fixed;
     width:100%;
     height:150px;
     left:0;
@@ -106,13 +106,14 @@ body::before{
 }
 
 .statusbar span{ color:var(--red-soft); font-weight: bold; }
-.leader { 
-    flex: 1; 
-    overflow: hidden; 
-    color: #ff4d4d; 
-    opacity: 0.4; 
+.leader {
+    flex: 1;
     margin: 0 8px;
-    white-space: nowrap;
+    height: 1em;
+    background-image: radial-gradient(circle, rgba(255,77,77,0.45) 1px, transparent 1px);
+    background-size: 8px 100%;
+    background-repeat: repeat-x;
+    background-position: left center;
 }
 
 .signal-container {
@@ -221,11 +222,11 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
 <div class="container">
 
 <div class="statusbar">
-    <div class="status-item"><div>SESSÃO</div><span class="leader">....................................................................................</span><span id="session"></span></div>
-    <div class="status-item"><div>NÓ</div><span class="leader">....................................................................................</span><span>US-OR-01</span></div>
+    <div class="status-item"><div>SESSÃO</div><span class="leader"></span><span id="session"></span></div>
+    <div class="status-item"><div>NÓ</div><span class="leader"></span><span>US-OR-01</span></div>
     <div class="status-item">
         <div>LATÊNCIA</div> 
-        <span class="leader">....................................................................................</span>
+        <span class="leader"></span>
         <span style="display:inline-flex; align-items: baseline;">
             <div class="signal-container">
                 <div class="bar h1"></div>
@@ -235,7 +236,7 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
             <span id="latency"></span>
         </span>
     </div>
-    <div class="status-item"><div>ACESSO</div><span class="leader">....................................................................................</span><span id="access-time"></span></div>
+    <div class="status-item"><div>ACESSO</div><span class="leader"></span><span id="access-time"></span></div>
 </div>
 
 <div class="panel">
@@ -353,17 +354,20 @@ setInterval(updateLatency, 5000);
         lastTime = timestamp;
 
         pos += speed * delta;
-        if(pos > docHeight){
-            pos = -scanHeight;
-            updateDocHeight();
-        }
 
         let opacity = 1;
         if(boxEl && pos > boxBottom){
             opacity = Math.max(0, 1 - (pos - boxBottom) / fadeDistance);
+            if(opacity === 0){
+                pos = -scanHeight;
+                updateDocHeight();
+            }
         }
 
-        scanEl.style.transform = `translateY(${pos}px)`;
+        // Converte posição no documento para posição na viewport (fixed)
+        const viewportPos = pos - window.scrollY;
+
+        scanEl.style.transform = `translateY(${viewportPos}px)`;
         scanEl.style.opacity = opacity;
         requestAnimationFrame(step);
     }

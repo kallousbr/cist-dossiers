@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CIST // NÓ DE DOSSIÊ SEGURO</title>
+<title>访问受限</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;700&display=swap" rel="stylesheet">
 
@@ -320,6 +320,141 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     <div class="corner bl"></div>
     <div class="corner br"></div>
 
+    <div class="header">
+        <h1>CONSELHO INTERNACIONAL DE SEGURANÇA TERRESTRE</h1>
+        <h1 style="font-size: 14px; margin-top: 5px; opacity: 0.9; letter-spacing: 2px;">国际陆地安全理事会</h1>
+        <h2>SISTEMA CENTRAL DE ARQUIVOS DE PESSOAL<br><span style="font-size: 11px;">中央人事档案系统</span></h2>
+        <div class="badge">SECRETO // 机密</div>
+    </div>
+
+    <div class="grid">
+        <div class="photo">SEM IMAGEM</div>
+        <div>
+            <table>
+                <tr><td class="label">IDENTIFICADOR</td><td class="value">US-123456789012345678</td></tr>
+                <tr><td class="label">NOME</td><td class="value">N/A</td></tr>
+                <tr><td class="label">DATA DE NASCIMENTO</td><td class="value">N/A</td></tr>
+                <tr><td class="label">ALTURA</td><td class="value">N/A</td></tr>
+                <tr><td class="label">TIPO SANGUÍNEO</td><td class="value">N/A</td></tr>
+                <tr><td class="label">INÍCIO DE SERVIÇO</td><td class="value">--/--/----</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>PERFIL OPERACIONAL</h3>
+        <div class="box">
+            [Inserir histórico, especialidade e dados confidenciais do operador aqui.]
+        </div>
+    </div>
+</div>
+
+</div>
+
+<script>
+function gen(){
+    function getChar(type) {
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const numbers = "0123456789";
+        return type === 'L' ? letters.charAt(Math.floor(Math.random() * letters.length)) : numbers.charAt(Math.floor(Math.random() * numbers.length));
+    }
+
+    function part() {
+        let mode = Math.random() < 0.5 ? 'L' : 'N';
+        let res = "";
+        for(let i=0; i<4; i++) {
+            res += getChar(mode);
+            mode = (mode === 'L' ? 'N' : 'L');
+        }
+        return res;
+    }
+    
+    const session = `CIST-${part()}-${part()}-${part()}`;
+    document.getElementById("session").innerText = session;
+}
+
+function updateLatency() {
+    const lat = Math.floor(Math.random() * (13 - 12 + 1)) + 12;
+    document.getElementById("latency").innerText = lat + " ms";
+}
+
+function setAccessTime() {
+    const now = new Date();
+    now.setFullYear(now.getFullYear() + 10);
+
+    const pad = (num) => String(num).padStart(2, '0');
+
+    const year = now.getFullYear();
+    const month = pad(now.getMonth() + 1);
+    const day = pad(now.getDate());
+    const hours = pad(now.getHours());
+    const minutes = pad(now.getMinutes());
+    const seconds = pad(now.getSeconds());
+
+    const offsetMin = now.getTimezoneOffset();
+    const offsetSign = offsetMin > 0 ? '-' : '+';
+    const absOffsetMin = Math.abs(offsetMin);
+    const offsetHours = pad(Math.floor(absOffsetMin / 60));
+    const offsetMinutes = pad(absOffsetMin % 60);
+    const tz = `${offsetSign}${offsetHours}:${offsetMinutes}`;
+
+    document.getElementById("access-time").innerText = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${tz}`;
+}
+
+gen();
+updateLatency();
+setAccessTime();
+setInterval(updateLatency, 5000);
+
+(function(){
+    const scanEl = document.querySelector('.scan');
+    const boxEl = document.querySelector('.box');
+    const scanHeight = 150;
+    const speed = (window.innerHeight * 1.1 + 200) / 6; // matches original 6s-per-viewport pace
+    const fadeDistance = 250; // px over which the scan fades out after passing the box
+    let docHeight = document.documentElement.scrollHeight;
+    let boxBottom = boxEl ? boxEl.offsetTop + boxEl.offsetHeight : docHeight;
+    let pos = -scanHeight;
+    let lastTime = null;
+
+    function updateDocHeight(){
+        docHeight = document.documentElement.scrollHeight;
+        if(boxEl) boxBottom = boxEl.offsetTop + boxEl.offsetHeight;
+    }
+    window.addEventListener('resize', updateDocHeight);
+
+    function step(timestamp){
+        if(lastTime === null) lastTime = timestamp;
+        const delta = (timestamp - lastTime) / 1000;
+        lastTime = timestamp;
+
+        pos += speed * delta;
+        if(pos > docHeight){
+            pos = -scanHeight;
+            updateDocHeight();
+        }
+
+        let opacity = 1;
+        if(boxEl && pos > boxBottom){
+            opacity = Math.max(0, 1 - (pos - boxBottom) / fadeDistance);
+        }
+
+        scanEl.style.transform = `translateY(${pos}px)`;
+        scanEl.style.opacity = opacity;
+        requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+
+    // recalc on content changes (e.g. dynamic fields)
+    const observer = new MutationObserver(updateDocHeight);
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
+
+</script>
+
+</body>
+</html>
     <div class="header">
         <h1>CONSELHO INTERNACIONAL DE SEGURANÇA TERRESTRE</h1>
         <h1 style="font-size: 14px; margin-top: 5px; opacity: 0.9; letter-spacing: 2px;">国际陆地安全理事会</h1>

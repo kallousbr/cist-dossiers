@@ -267,7 +267,7 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     </div>
 
     <div class="section">
-        <h3>PERFIL OPERACIONAL</h3>
+        <h3>PERFIL</h3>
         <div class="box">
             [Inserir histórico, especialidade e dados confidenciais do operador aqui.]
         </div>
@@ -321,6 +321,68 @@ function setAccessTime() {
     const absOffsetMin = Math.abs(offsetMin);
     const offsetHours = pad(Math.floor(absOffsetMin / 60));
     const offsetMinutes = pad(absOffsetMin % 60);
+    const tz = `${offsetSign}${offsetHours}:${offsetMinutes}`;
+
+    document.getElementById("access-time").innerText = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${tz}`;
+}
+
+gen();
+updateLatency();
+setAccessTime();
+setInterval(updateLatency, 5000);
+
+(function(){
+    const scanEl = document.querySelector('.scan');
+    const boxEl = document.querySelector('.box');
+    const scanHeight = 150;
+    const speed = (window.innerHeight * 1.1 + 200) / 6; // matches original 6s-per-viewport pace
+    const fadeDistance = 250; // px over which the scan fades out after passing the box
+    let docHeight = document.documentElement.scrollHeight;
+    let boxBottom = boxEl ? boxEl.offsetTop + boxEl.offsetHeight : docHeight;
+    let pos = -scanHeight;
+    let lastTime = null;
+
+    function updateDocHeight(){
+        docHeight = document.documentElement.scrollHeight;
+        if(boxEl) boxBottom = boxEl.offsetTop + boxEl.offsetHeight;
+    }
+    window.addEventListener('resize', updateDocHeight);
+
+    function step(timestamp){
+        if(lastTime === null) lastTime = timestamp;
+        const delta = (timestamp - lastTime) / 1000;
+        lastTime = timestamp;
+
+        pos += speed * delta;
+
+        let opacity = 1;
+        if(boxEl && pos > boxBottom){
+            opacity = Math.max(0, 1 - (pos - boxBottom) / fadeDistance);
+            if(opacity === 0){
+                pos = -scanHeight;
+                updateDocHeight();
+            }
+        }
+
+        // Converte posição no documento para posição na viewport (fixed)
+        const viewportPos = pos - window.scrollY;
+
+        scanEl.style.transform = `translateY(${viewportPos}px)`;
+        scanEl.style.opacity = opacity;
+        requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+
+    // recalc on content changes (e.g. dynamic fields)
+    const observer = new MutationObserver(updateDocHeight);
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
+
+</script>
+
+</body>
+</html>
     const tz = `${offsetSign}${offsetHours}:${offsetMinutes}`;
 
     document.getElementById("access-time").innerText = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${tz}`;

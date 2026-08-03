@@ -30,7 +30,6 @@ body{
     min-height: 100vh;
 }
 
-/* Efeito CRT - Scanlines */
 body::before{
     content:"";
     position:fixed;
@@ -43,7 +42,6 @@ body::before{
     opacity: 0.3;
 }
 
-/* Scanner vertical */
 .scan{
     position:absolute;
     width:100%;
@@ -74,7 +72,6 @@ body::before{
     position: relative;
 }
 
-/* Triângulos de Canto */
 .corner {
     position: absolute;
     width: 14px;
@@ -112,10 +109,10 @@ body::before{
 .leader { 
     flex: 1; 
     overflow: hidden; 
-    color: #ff4d4d; 
-    opacity: 0.4; 
     margin: 0 8px;
-    white-space: nowrap;
+    border-bottom: 2px dotted #ff4d4d;
+    opacity: 0.4;
+    height: 8px;
 }
 
 .signal-container {
@@ -231,11 +228,11 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
 <div class="container">
 
 <div class="statusbar">
-    <div class="status-item"><div>SESSÃO</div><span class="leader">....................................................................................</span><span id="session"></span></div>
-    <div class="status-item"><div>NÓ</div><span class="leader">....................................................................................</span><span>US-OR-01</span></div>
+    <div class="status-item"><div>SESSÃO</div><span class="leader"></span><span id="session"></span></div>
+    <div class="status-item"><div>NÓ</div><span class="leader"></span><span>US-OR-01</span></div>
     <div class="status-item">
         <div>LATÊNCIA</div> 
-        <span class="leader">....................................................................................</span>
+        <span class="leader"></span>
         <span style="display:inline-flex; align-items: baseline;">
             <div class="signal-container">
                 <div class="bar h1"></div>
@@ -245,7 +242,7 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
             <span id="latency"></span>
         </span>
     </div>
-    <div class="status-item"><div>ACESSO</div><span class="leader">....................................................................................</span><span id="access-time"></span></div>
+    <div class="status-item"><div>ACESSO</div><span class="leader"></span><span id="access-time"></span></div>
 </div>
 
 <div class="panel">
@@ -262,7 +259,7 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     </div>
 
     <div class="grid">
-                <div class="photo"><img src="https://i.imgur.com/8AyeVlI.png" referrerpolicy="no-referrer" style="width:100%; height:100%; object-fit:cover;"></div>
+        <div class="photo"><img src="https://i.imgur.com/8AyeVlI.png" referrerpolicy="no-referrer" style="width:100%; height:100%; object-fit:cover;"></div>
         <div>
             <table>
                 <tr><td class="label">IDENTIFICADOR</td><td class="value">FR-87085020020308042C</td></tr>
@@ -346,8 +343,8 @@ setInterval(updateLatency, 5000);
     const scanEl = document.querySelector('.scan');
     const boxEl = document.querySelector('.box');
     const scanHeight = 150;
-    const speed = (window.innerHeight * 1.1 + 200) / 6; // matches original 6s-per-viewport pace
-    const fadeDistance = 250; // px over which the scan fades out after passing the box
+    const speed = (window.innerHeight * 1.1 + 200) / 6;
+    const fadeDistance = 250;
     let docHeight = document.documentElement.scrollHeight;
     let boxBottom = boxEl ? boxEl.offsetTop + boxEl.offsetHeight : docHeight;
     let pos = -scanHeight;
@@ -382,7 +379,6 @@ setInterval(updateLatency, 5000);
 
     requestAnimationFrame(step);
 
-    // recalc on content changes (e.g. dynamic fields)
     const observer = new MutationObserver(updateDocHeight);
     observer.observe(document.body, { childList: true, subtree: true });
 })();

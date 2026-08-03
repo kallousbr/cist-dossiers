@@ -109,10 +109,10 @@ body::before{
 .leader { 
     flex: 1; 
     overflow: hidden; 
-    color: #ff4d4d; 
-    opacity: 0.4; 
     margin: 0 8px;
-    white-space: nowrap;
+    border-bottom: 2px dotted #ff4d4d;
+    opacity: 0.4;
+    height: 8px;
 }
 
 .signal-container {
@@ -228,11 +228,11 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
 <div class="container">
 
 <div class="statusbar">
-    <div class="status-item"><div>SESSÃO</div><span class="leader">....................................................................................</span><span id="session"></span></div>
-    <div class="status-item"><div>NÓ</div><span class="leader">....................................................................................</span><span>US-OR-01</span></div>
+    <div class="status-item"><div>SESSÃO</div><span class="leader"></span><span id="session"></span></div>
+    <div class="status-item"><div>NÓ</div><span class="leader"></span><span>US-OR-01</span></div>
     <div class="status-item">
         <div>LATÊNCIA</div> 
-        <span class="leader">....................................................................................</span>
+        <span class="leader"></span>
         <span style="display:inline-flex; align-items: baseline;">
             <div class="signal-container">
                 <div class="bar h1"></div>
@@ -242,7 +242,7 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
             <span id="latency"></span>
         </span>
     </div>
-    <div class="status-item"><div>ACESSO</div><span class="leader">....................................................................................</span><span id="access-time"></span></div>
+    <div class="status-item"><div>ACESSO</div><span class="leader"></span><span id="access-time"></span></div>
 </div>
 
 <div class="panel">
@@ -275,8 +275,8 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     <div class="section">
         <h3>PERFIL OPERACIONAL</h3>
         <div class="box">
-            <p>Nascido na Federação Russa, o operador possui histórico civil fundamentado na engenharia de software e VANTs. Sua transição para o ambiente tático efetivou-se durante a Grande Queda em 2023. Com o colapso estrutural que paralisou o teatro de operações ucraniano e convergiu o conflito convencional para uma crise de sobrevivência generalizada, as proficiências técnicas civis do operador foram requisitadas para aplicação militar imediata em forças de contenção.</p>
-            <p>Ao longo da última década, o operador foi alocado em zonas de colapso no leste europeu, conduzindo missões de reconhecimento, vigilância e suporte aéreo a unidades terrestres da CIST. Seu registro destaca a atuação em áreas de quarentena severa, operando contra contingentes de infectados biológicos em centros urbanos abandonados e zonas de contaminação. Sob condições crônicas de privação logística, Orlov desenvolveu a capacidade de recondicionar equipamentos no campo de batalha, aplicando soluções improvisadas de engenharia para adaptar drones civis e militares a parâmetros táticos não documentados nos manuais operacionais.</p>
+            <p>Nascido na Federação Russa, o operador possui histórico civil fundamentado na engenharia de hardware autodidata e na modificação de veículos aéreos não tripulados (VANTs). Sua transição para o ambiente tático efetivou-se durante a Grande Queda em 2023. Com o colapso estrutural que paralisou o teatro de operações ucraniano e convergiu o conflito convencional para uma crise de sobrevivência generalizada, as proficiências técnicas civis do operador foram requisitadas para aplicação militar imediata em forças de contenção.</p>
+            <p>Ao longo da última década, o operador foi alocado em zonas de colapso no leste europeu, conduzindo missões de reconhecimento, vigilância e suporte aéreo a unidades terrestres da CIST. Seu registro destaca a atuação em áreas de quarentena severa, operando contra contingentes de infectados biológicos (humanos e fauna) em centros urbanos abandonados e zonas de contaminação. Sob condições crônicas de privação logística, Orlov desenvolveu a capacidade de recondicionar equipamentos no campo de batalha, aplicando soluções improvisadas de engenharia para adaptar drones civis e militares a parâmetros táticos não documentados nos manuais operacionais.</p>
             <p>Veles acompanha com interesse discussões sobre política, estratégia e relações internacionais, mas raramente as trata como questões ideológicas. Para ele, governos são julgados menos por suas promessas do que por sua capacidade de proteger sua população quando tudo começa a ruir. Em um mundo moldado por guerras, surtos e colapsos sucessivos, aprendeu que a sobrevivência de uma sociedade depende mais da competência de suas instituições do que da retórica de seus líderes.</p>
         </div>
     </div>

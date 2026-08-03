@@ -19,7 +19,6 @@
 
 html, body{
     height: 100%;
-    overflow: hidden;
 }
 
 body{
@@ -31,7 +30,6 @@ body{
     min-height: 100vh;
 }
 
-/* Efeito CRT - Scanlines */
 body::before{
     content:"";
     position:fixed;
@@ -44,7 +42,6 @@ body::before{
     opacity: 0.3;
 }
 
-/* Scanner vertical */
 .scan{
     position:absolute;
     width:100%;
@@ -75,7 +72,6 @@ body::before{
     position: relative;
 }
 
-/* Triângulos de Canto */
 .corner {
     position: absolute;
     width: 14px;
@@ -211,88 +207,23 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     color: #ffcccc;
 }
 
+.box p{
+    margin: 0 0 16px 0;
+}
+.box p:last-child{
+    margin-bottom: 0;
+}
+
 @media (max-width: 600px) {
     .grid {
         grid-template-columns: 1fr !important;
     }
-}
-
-/* Overlay de Bloqueio / Revisão */
-.lock-overlay{
-    position:fixed;
-    inset:0;
-    background: rgba(0,0,0,0.88);
-    backdrop-filter: blur(3px);
-    z-index: 500;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding: 20px;
-}
-
-.lock-box{
-    max-width: 480px;
-    width: 100%;
-    border: 1px solid var(--red);
-    background: rgba(15,0,0,0.95);
-    padding: 35px 30px;
-    text-align:center;
-    position: relative;
-    box-shadow: 0 0 40px rgba(255,0,0,0.25);
-}
-
-.lock-icon{
-    font-size: 34px;
-    color: var(--red);
-    margin-bottom: 15px;
-    letter-spacing: 2px;
-}
-
-.lock-box h2{
-    margin: 0 0 15px 0;
-    color: var(--red);
-    font-size: 18px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 700;
-}
-
-.lock-box p{
-    margin: 0 0 12px 0;
-    color: var(--off-white);
-    font-size: 13px;
-    line-height: 1.7;
-    letter-spacing: 0.3px;
-}
-
-.lock-box .release{
-    margin-top: 20px;
-    display:inline-block;
-    border: 1px solid var(--red);
-    padding: 6px 14px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--red-soft);
-    letter-spacing: 1px;
 }
 </style>
 </head>
 
 <body>
 <div class="scan"></div>
-
-<div class="lock-overlay">
-    <div class="lock-box">
-        <div class="corner tl"></div>
-        <div class="corner tr"></div>
-        <div class="corner bl"></div>
-        <div class="corner br"></div>
-        <div class="lock-icon">&#9888;</div>
-        <h2>Documento em Revisão</h2>
-        <p>Este dossiê está sendo revisado por oficiais do alto escalão. As informações estão sendo atualizadas para a operação.</p>
-        <p>Liberação prevista: <strong style="color: var(--red-soft);">01/08</strong>.</p>
-    </div>
-</div>
 
 <div class="container">
 
@@ -328,7 +259,7 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     </div>
 
     <div class="grid">
-        <div class="photo">SEM IMAGEM</div>
+        <div class="photo"><img src="https://i.imgur.com/nuR2oYm.png" referrerpolicy="no-referrer" style="width:100%; height:100%; object-fit:cover;"></div>
         <div>
             <table>
                 <tr><td class="label">IDENTIFICADOR</td><td class="value">DE-09162019961114088F</td></tr>
@@ -344,7 +275,9 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     <div class="section">
         <h3>PERFIL OPERACIONAL</h3>
         <div class="box">
-            [Inserir histórico, especialidade e dados confidenciais do operador aqui.]
+            <p>Nascido na Baviera, Ansgar Hössler integrava o 8º Batalhão de Engenharia de Montanha (Gebirgspionierbataillon 8) da Bundeswehr quando a Grande Queda ocorreu em 2023. Com o colapso estrutural da Alemanha e o início do Inverno Nuclear, assinou contrato com a CIST como especialista EOD (Desativação de Artefatos Explosivos). Essa transferência ocorreu mediante um acordo de prestação de serviços para garantir cotas de suprimentos, eletricidade e medicação para sua esposa, confinada no Setor Administrativo de Berlim.</p>
+            <p>Durante o Inverno Nuclear, Fenrir foi alocado na desobstrução das principais rotas logísticas europeias. O operador executou a neutralização de campos minados improvisados por milícias locais que emboscavam comboios da CIST, e atuou na contenção física de infectados nas ruínas de Munique e Stuttgart. O trabalho contínuo em zonas de risco resultou em um incidente crítico em seu registro: durante a evacuação de um bunker civil, operando sob fogo de insurgentes, Hössler não detectou o estopim secundário de uma barricada sabotada. A detonação colapsou a estrutura sobre os civis e sua equipe de cobertura. Protegido pela blindagem pesada do traje EOD, Hössler foi o único sobrevivente no local.</p>
+            <p>O incidente no bunker alterou a execução de seus protocolos de campo. O operador passou a conduzir varreduras secundárias não-oficiais em perímetros já declarados limpos pelas equipes de vanguarda. Enquanto unidades de assalto priorizam engajamentos diretos contra facções e ameaças biológicas, Hössler retém o avanço para buscar ativamente portas com fio de tropeço, veículos modificados e anomalias estruturais subjacentes. Essa abordagem de escrutínio físico atrasa cronogramas táticos, resultando frequentemente na paralisação de comboios por horas para inspeções de terreno suspeito. O operador rotineiramente descarta ordens de avanço rápido caso não tenha verificado o trajeto pessoalmente.</p>
         </div>
     </div>
 </div>
@@ -410,8 +343,8 @@ setInterval(updateLatency, 5000);
     const scanEl = document.querySelector('.scan');
     const boxEl = document.querySelector('.box');
     const scanHeight = 150;
-    const speed = (window.innerHeight * 1.1 + 200) / 6; // matches original 6s-per-viewport pace
-    const fadeDistance = 250; // px over which the scan fades out after passing the box
+    const speed = (window.innerHeight * 1.1 + 200) / 6;
+    const fadeDistance = 250;
     let docHeight = document.documentElement.scrollHeight;
     let boxBottom = boxEl ? boxEl.offsetTop + boxEl.offsetHeight : docHeight;
     let pos = -scanHeight;
@@ -446,11 +379,9 @@ setInterval(updateLatency, 5000);
 
     requestAnimationFrame(step);
 
-    // recalc on content changes (e.g. dynamic fields)
     const observer = new MutationObserver(updateDocHeight);
     observer.observe(document.body, { childList: true, subtree: true });
 })();
-
 </script>
 
 </body>

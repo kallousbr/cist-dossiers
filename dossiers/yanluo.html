@@ -109,10 +109,10 @@ body::before{
 .leader { 
     flex: 1; 
     overflow: hidden; 
-    color: #ff4d4d; 
-    opacity: 0.4; 
     margin: 0 8px;
-    white-space: nowrap;
+    border-bottom: 2px dotted #ff4d4d;
+    opacity: 0.4;
+    height: 8px;
 }
 
 .signal-container {
@@ -228,11 +228,11 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
 <div class="container">
 
 <div class="statusbar">
-    <div class="status-item"><div>SESSÃO</div><span class="leader">....................................................................................</span><span id="session"></span></div>
-    <div class="status-item"><div>NÓ</div><span class="leader">....................................................................................</span><span>US-OR-01</span></div>
+    <div class="status-item"><div>SESSÃO</div><span class="leader"></span><span id="session"></span></div>
+    <div class="status-item"><div>NÓ</div><span class="leader"></span><span>US-OR-01</span></div>
     <div class="status-item">
         <div>LATÊNCIA</div> 
-        <span class="leader">....................................................................................</span>
+        <span class="leader"></span>
         <span style="display:inline-flex; align-items: baseline;">
             <div class="signal-container">
                 <div class="bar h1"></div>
@@ -242,7 +242,7 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
             <span id="latency"></span>
         </span>
     </div>
-    <div class="status-item"><div>ACESSO</div><span class="leader">....................................................................................</span><span id="access-time"></span></div>
+    <div class="status-item"><div>ACESSO</div><span class="leader"></span><span id="access-time"></span></div>
 </div>
 
 <div class="panel">
@@ -275,7 +275,7 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     <div class="section">
         <h3>PERFIL OPERACIONAL</h3>
         <div class="box">
-            <p>Nascido em Hefei, Zhenyu tornou-se tutelado pelo Estado após a morte dos pais em um vazamento químico industrial. Foi direcionado jovem às academias do Ministério da Segurança do Estado (MSS). Sua maioridade legal e efetivação no serviço ativo coincidiram com a Grande Queda em 2023. Durante os anos do Inverno Nuclear, executou operações de infiltração e contra-inteligência em zonas de quarentena dominadas por facções paramilitares no leste asiático. Hoje, mantém dupla atuação: é Chefe de Equipe de Operações Civis na burocracia da MSS e Capitão comissionado pela CIST, disponível para mobilização tática imediata.</p>
+            <p>Nascido em Hefei, província de Anhui, Zhenyu tornou-se tutelado pelo Estado após a morte dos pais em um vazamento químico industrial. Foi direcionado jovem às academias do Ministério da Segurança do Estado (MSS). Sua maioridade legal e efetivação no serviço ativo coincidiram com a Grande Queda em 2023. Durante os anos do Inverno Nuclear, executou operações de infiltração e contra-inteligência em zonas de quarentena dominadas por facções paramilitares no leste asiático. Hoje, mantém dupla atuação: é Chefe de Equipe de Operações Civis na burocracia da MSS e Capitão comissionado pela CIST, disponível para mobilização tática imediata.</p>
             <p>Seu registro é marcado pelo desmantelamento de uma rede de subversão interna durante o Inverno Nuclear. Enquanto sua unidade combatia milícias locais, Zhenyu notou que o número de baixas inimigas não condizia com os relatórios de combate emitidos pelo comando. Ele ignorou a cadeia hierárquica e conduziu uma varredura física não autorizada nos terminais de comunicação de sua própria base. O operador rastreou o vazamento de rotas e coordenadas até seu oficial supervisor e mentor. Após encontrar provas físicas de que o comandante vendia dados táticos aos insurgentes, Zhenyu quebrou a rede, reportou o caso ao sistema central e assinou pessoalmente a execução sumária do superior.</p>
             <p>A adesão ideológica de Zhenyu ao Conselho Internacional fundamenta-se em sua convicção de que a intervenção global foi a única barreira contra o colapso definitivo das civilizações humanas. Contudo, o incidente com seu antigo mentor consolidou a crença de que a principal ameaça à ordem estabelecida é a corrupção interna, um viés analítico que exige monitoramento contínuo quanto ao seu impacto na coesão operacional das forças conjuntas.</p>
         </div>

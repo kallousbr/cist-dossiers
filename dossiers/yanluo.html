@@ -30,7 +30,6 @@ body{
     min-height: 100vh;
 }
 
-/* Efeito CRT - Scanlines */
 body::before{
     content:"";
     position:fixed;
@@ -43,7 +42,6 @@ body::before{
     opacity: 0.3;
 }
 
-/* Scanner vertical */
 .scan{
     position:absolute;
     width:100%;
@@ -74,7 +72,6 @@ body::before{
     position: relative;
 }
 
-/* Triângulos de Canto */
 .corner {
     position: absolute;
     width: 14px;
@@ -278,9 +275,9 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     <div class="section">
         <h3>PERFIL OPERACIONAL</h3>
         <div class="box">
-            <p>Nascido em Hefei, Zhenyu tornou-se tutelado pelo Estado logo nos primeiros anos de vida, após seus pais falecerem em um vazamento químico industrial. Sua alta aptidão cognitiva foi identificada prematuramente, colocando-o no radar de recrutadores governamentais desde a juventude. A efetivação de sua entrada nas academias de inteligência, contudo, dependia da maioridade legal. Poucos meses após completar dezoito anos, a Grande Queda ocorreu, e sua convocação oficial foi antecipada pelo estado de emergência. Ao longo da carreira, participou de operações contra insurgências, organizações criminosas e redes de desinformação que ameaçavam a estabilidade das regiões sob controle do Conselho. Durante sua formação, foi guiado por um oficial veterano que se tornou sua principal âncora moral na agência.</p>
-            <p>Foi nesse período que aprendeu uma das lições mais brutais e importantes de sua carreira: insurgências raramente são derrotadas apenas com força. Elas sobrevivem porque controlam narrativas, compram lealdades, manipulam informações e exploram o medo. Zhenyu aprendeu isso não na academia, mas na prática, quando relatórios automatizados de sua unidade começaram a entrar em conflito direto com o número de baixas em campo. Em um mundo onde a informação se tornou tão estratégica quanto qualquer arma, compreender pessoas passou a ser mais valioso do que simplesmente rastrear dados. Ignorando as assinaturas digitais impecáveis do sistema, ele conduziu uma investigação autônoma e descobriu que os vazamentos táticos vinham do próprio veterano que o apadrinhou. O mentor repassava as coordenadas aos insurgentes mascarado por credenciais nas quais todos confiavam cegamente.</p>
-            <p>Zhenyu é leal a CIST. Ele confia no papel da instituição em evitar um colapso ainda maior das civilizações globais.</p>
+            <p>Nascido em Hefei, Zhenyu tornou-se tutelado pelo Estado após a morte dos pais em um vazamento químico industrial. Foi direcionado jovem às academias do Ministério da Segurança do Estado (MSS). Sua maioridade legal e efetivação no serviço ativo coincidiram com a Grande Queda em 2023. Durante os anos do Inverno Nuclear, executou operações de infiltração e contra-inteligência em zonas de quarentena dominadas por facções paramilitares no leste asiático. Hoje, mantém dupla atuação: é Chefe de Equipe de Operações Civis na burocracia da MSS e Capitão comissionado pela CIST, disponível para mobilização tática imediata.</p>
+            <p>Seu registro é marcado pelo desmantelamento de uma rede de subversão interna durante o Inverno Nuclear. Enquanto sua unidade combatia milícias locais, Zhenyu notou que o número de baixas inimigas não condizia com os relatórios de combate emitidos pelo comando. Ele ignorou a cadeia hierárquica e conduziu uma varredura física não autorizada nos terminais de comunicação de sua própria base. O operador rastreou o vazamento de rotas e coordenadas até seu oficial supervisor e mentor. Após encontrar provas físicas de que o comandante vendia dados táticos aos insurgentes, Zhenyu quebrou a rede, reportou o caso ao sistema central e assinou pessoalmente a execução sumária do superior.</p>
+            <p>A adesão ideológica de Zhenyu ao Conselho Internacional fundamenta-se em sua convicção de que a intervenção global foi a única barreira contra o colapso definitivo das civilizações humanas. Contudo, o incidente com seu antigo mentor consolidou a crença de que a principal ameaça à ordem estabelecida é a corrupção interna, um viés analítico que exige monitoramento contínuo quanto ao seu impacto na coesão operacional das forças conjuntas.</p>
         </div>
     </div>
 </div>
@@ -346,8 +343,8 @@ setInterval(updateLatency, 5000);
     const scanEl = document.querySelector('.scan');
     const boxEl = document.querySelector('.box');
     const scanHeight = 150;
-    const speed = (window.innerHeight * 1.1 + 200) / 6; // matches original 6s-per-viewport pace
-    const fadeDistance = 250; // px over which the scan fades out after passing the box
+    const speed = (window.innerHeight * 1.1 + 200) / 6;
+    const fadeDistance = 250;
     let docHeight = document.documentElement.scrollHeight;
     let boxBottom = boxEl ? boxEl.offsetTop + boxEl.offsetHeight : docHeight;
     let pos = -scanHeight;
@@ -382,7 +379,6 @@ setInterval(updateLatency, 5000);
 
     requestAnimationFrame(step);
 
-    // recalc on content changes (e.g. dynamic fields)
     const observer = new MutationObserver(updateDocHeight);
     observer.observe(document.body, { childList: true, subtree: true });
 })();

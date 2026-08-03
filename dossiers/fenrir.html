@@ -109,10 +109,10 @@ body::before{
 .leader { 
     flex: 1; 
     overflow: hidden; 
-    color: #ff4d4d; 
-    opacity: 0.4; 
     margin: 0 8px;
-    white-space: nowrap;
+    border-bottom: 2px dotted #ff4d4d;
+    opacity: 0.4;
+    height: 8px;
 }
 
 .signal-container {
@@ -228,11 +228,11 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
 <div class="container">
 
 <div class="statusbar">
-    <div class="status-item"><div>SESSÃO</div><span class="leader">....................................................................................</span><span id="session"></span></div>
-    <div class="status-item"><div>NÓ</div><span class="leader">....................................................................................</span><span>US-OR-01</span></div>
+    <div class="status-item"><div>SESSÃO</div><span class="leader"></span><span id="session"></span></div>
+    <div class="status-item"><div>NÓ</div><span class="leader"></span><span>US-OR-01</span></div>
     <div class="status-item">
         <div>LATÊNCIA</div> 
-        <span class="leader">....................................................................................</span>
+        <span class="leader"></span>
         <span style="display:inline-flex; align-items: baseline;">
             <div class="signal-container">
                 <div class="bar h1"></div>
@@ -242,7 +242,7 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
             <span id="latency"></span>
         </span>
     </div>
-    <div class="status-item"><div>ACESSO</div><span class="leader">....................................................................................</span><span id="access-time"></span></div>
+    <div class="status-item"><div>ACESSO</div><span class="leader"></span><span id="access-time"></span></div>
 </div>
 
 <div class="panel">

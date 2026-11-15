@@ -534,7 +534,7 @@ const FICHA = {
     especialidades: "Texto das especialidades do personagem.",
 
     // O estado do monitor é automático: depende da SAÚDE (vitais.saude).
-    // 80-100 NOMINAL | 40-79 ATENÇÃO | 27-39 ALERTA | 11-26 PERIGO | 1-10 CRÍTICO | 0 "--"
+    // 80-100 NOMINAL | 51-79 ATENÇÃO | 27-50 ALERTA | 11-26 PERIGO | 1-10 CRÍTICO | 0 "--"
 
     // Deixe vazio [] se não houver efeitos.
     // ocultarEfeitosVazio: false => a caixa aparece com "Nenhum." | true => a caixa some.
@@ -557,7 +557,7 @@ const FICHA = {
    alarme: 'pisca' = triângulo laranja piscando | 'fixo' = branco, sem piscar */
 const STATUS_NIVEIS = [
     { min:80,        cor:"#1fb5e8", texto:"NOMINAL", ciclo:260, batidas:[0],     vel:90,  amp:1,   esc:1 },
-    { min:40,        cor:"#f2c200", texto:"ATENÇÃO", ciclo:300, batidas:[0,110], vel:100, amp:1,   esc:1 },
+    { min:51,        cor:"#f2c200", texto:"ATENÇÃO", ciclo:300, batidas:[0,110], vel:100, amp:1,   esc:1 },
     { min:27,        cor:"#f28c14", texto:"ALERTA",  ciclo:140, batidas:[0],     vel:125, amp:1,   esc:1,    alarme:"pisca" },
     { min:11,        cor:"#f0501a", texto:"PERIGO",  ciclo:85,  batidas:[0],     vel:140, amp:1,   esc:1,    alarme:"pisca" },
     { min:1,         cor:"#9a1010", texto:"CRÍTICO", ciclo:36,  batidas:[0],     vel:150, amp:0.5, esc:0.35, alarme:"fixo"  },

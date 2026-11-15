@@ -13,12 +13,8 @@
     --red:#ff0000;
     --red-soft:#ff4d4d;
     --green-signal: #00ff88;
-    --off-white:#dcdcdc; 
+    --off-white:#dcdcdc;
     --font:'Inter', sans-serif;
-}
-
-html, body{
-    height: 100%;
 }
 
 body{
@@ -28,13 +24,15 @@ body{
     font-family:var(--font);
     position: relative;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
+/* Efeito CRT - Scanlines */
 body::before{
     content:"";
     position:fixed;
     inset:0;
-    background: linear-gradient(rgba(18, 0, 0, 0) 50%, rgba(0, 0, 0, 0.4) 50%), 
+    background: linear-gradient(rgba(18, 0, 0, 0) 50%, rgba(0, 0, 0, 0.4) 50%),
                 linear-gradient(90deg, rgba(255, 0, 0, 0.1), rgba(0, 0, 0, 0.05), rgba(255, 0, 0, 0.1));
     background-size: 100% 4px, 3px 100%;
     pointer-events:none;
@@ -42,6 +40,7 @@ body::before{
     opacity: 0.3;
 }
 
+/* Scanner vertical */
 .scan{
     position:absolute;
     width:100%;
@@ -72,6 +71,7 @@ body::before{
     position: relative;
 }
 
+/* Triângulos de Canto */
 .corner {
     position: absolute;
     width: 14px;
@@ -106,9 +106,9 @@ body::before{
 }
 
 .statusbar span{ color:var(--red-soft); font-weight: bold; }
-.leader { 
-    flex: 1; 
-    overflow: hidden; 
+.leader {
+    flex: 1;
+    overflow: hidden;
     margin: 0 8px;
     border-bottom: 2px dotted #ff4d4d;
     opacity: 0.4;
@@ -117,7 +117,7 @@ body::before{
 
 .signal-container {
     display: inline-flex;
-    align-items: flex-end; 
+    align-items: flex-end;
     gap: 2px;
     margin-right: 6px;
     height: 12px;
@@ -128,6 +128,44 @@ body::before{
 .bar.h2 { height: 8px; }
 .bar.h3 { height: 12px; }
 
+/* ===== GUIAS ===== */
+.tabs{
+    display:flex;
+    gap:6px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+.tab-btn{
+    appearance:none;
+    position:relative;
+    font-family:var(--font);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--red);
+    background:rgba(20,0,0,0.4);
+    border:1px solid var(--red);
+    padding:10px 18px;
+    cursor:pointer;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+}
+.tab-btn small{ font-size:10px; opacity:0.8; margin-left:6px; letter-spacing:1px; }
+/* linha diagonal no canto cortado (o clip-path apaga a borda ali) */
+.tab-btn::after{
+    content:"";
+    position:absolute;
+    top:-1px; right:-1px;
+    width:12px; height:12px;
+    pointer-events:none;
+    background:linear-gradient(to top right, transparent calc(50% - 1.2px), var(--red) calc(50% - 1.2px), var(--red) calc(50% + 1.2px), transparent calc(50% + 1.2px));
+}
+.tab-btn:hover{ background:rgba(255,0,0,0.15); }
+.tab-btn.active{ background:var(--red); color:var(--off-white); }
+.tab-btn:focus-visible{ outline:2px solid var(--off-white); outline-offset:2px; }
+.tab-content{ display:none; }
+.tab-content.active{ display:block; }
+
 .header{
     text-align:center;
     border-bottom:1px solid var(--red);
@@ -135,13 +173,13 @@ body::before{
     margin-bottom:25px;
 }
 
-.header h1{ 
-    margin:0; 
-    font-size:20px; 
+.header h1{
+    margin:0;
+    font-size:20px;
     font-weight: 700;
-    letter-spacing:1px; 
-    text-transform:uppercase; 
-    color: var(--red); 
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color: var(--red);
     line-height: 1.2;
 }
 
@@ -175,27 +213,24 @@ body::before{
 
 table{ width:100%; border-collapse:collapse; font-size:13px; }
 td{ padding:10px 0; border-bottom:1px solid #330000; }
-.label{ 
-    color: var(--red); 
-    font-weight:bold; 
-}
-.value{ 
-    text-align:right; 
-    letter-spacing:1px; 
-    color: var(--red-soft); 
-    font-weight: bold;
-}
+.label{ color: var(--red); font-weight:bold; }
+.value{ text-align:right; letter-spacing:1px; color: var(--red-soft); font-weight: bold; }
 
 .section{ margin-top:30px; }
-.section h3{ 
-    font-size:14px; 
-    letter-spacing:1px; 
-    margin-bottom:15px; 
-    color:var(--red); 
-    border-left: 3px solid var(--red); 
+.section:first-child{ margin-top:0; }
+.section h3{
+    font-size:14px;
+    letter-spacing:1px;
+    margin-top:0;
+    margin-bottom:15px;
+    color:var(--red);
+    border-left: 3px solid var(--red);
     padding-left: 10px;
     text-transform: uppercase;
 }
+
+.box p{ margin: 0 0 16px 0; }
+.box p:last-child{ margin-bottom: 0; }
 
 .box{
     border:1px solid var(--red);
@@ -207,17 +242,165 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     color: #ffcccc;
 }
 
-.box p{
-    margin: 0 0 16px 0;
+/* ===== FICHA: ATRIBUTOS + STATUS ===== */
+.ficha{ display:grid; grid-template-columns:1fr 1fr; gap:25px; }
+.ficha > *{ min-width:0; }
+.ficha .section{ margin-top:0; }
+.col-status{ display:flex; flex-direction:column; }
+
+/* Vitais (SAÚDE / ENERGIA / SEDE) */
+.vitais{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    margin-top:8px;
 }
-.box p:last-child{
-    margin-bottom: 0;
+.vital{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 0;
+    border-bottom:1px solid #330000;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:1px;
+    color:var(--vc);
 }
+.vital .v-ico{ display:inline-flex; }
+.vital .v-name{ width:72px; }
+.vital .v-bar{
+    flex:1;
+    height:10px;
+    border:1px solid var(--vc);
+    background:#120000;
+    position:relative;
+}
+.vital .v-bar i{ display:block; height:100%; background:var(--vc); }
+.vital .v-bar::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(90deg, transparent 0, transparent calc(10% - 2px), #0a0000 calc(10% - 2px), #0a0000 10%);
+}
+.vital .v-num{ min-width:62px; text-align:right; }
+
+/* Divisória */
+.divisor{ position:relative; height:1px; background:var(--red); margin:30px 0; }
+.divisor::before, .divisor::after{
+    content:"";
+    position:absolute; top:0;
+    width:10px; height:10px;
+    background:var(--red);
+}
+.divisor::before{ left:0; clip-path:polygon(0 0, 100% 0, 0 100%); }
+.divisor::after{ right:0; clip-path:polygon(0 0, 100% 0, 100% 100%); }
+.divisor + .section{ margin-top:0; }
+
+.attr{
+    display:flex;
+    align-items:baseline;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:1px;
+    padding:9px 0;
+    border-bottom:1px solid #330000;
+}
+.attr .a-name{ color:var(--red); }
+.attr .a-ico{ display:inline-flex; align-self:center; margin-right:10px; color:var(--red); }
+.attr .a-val{ color:var(--red-soft); }
+.attr .a-val em{ font-style:normal; color:var(--off-white); margin-left:6px; }
+.attr-sep{ height:14px; }
+
+.spec{
+    border:1px solid var(--red);
+    background:#0a0000;
+    padding:14px 16px;
+    font-size:13px;
+    line-height:1.6;
+    color:#ffcccc;
+}
+.spec b{ color:var(--red); letter-spacing:1px; display:block; margin-bottom:4px; }
+
+/* Monitor de status (estilo Signalis) */
+.monitor{
+    position:relative;
+    height:150px;
+    border:1px solid var(--red);
+    padding:5px;
+    background:#0a0000;
+}
+.monitor-screen{
+    position:relative;
+    width:100%;
+    height:100%;
+    background:var(--st-cor, #1fb5e8);
+    box-shadow: inset 0 0 0 2px rgba(0,0,0,0.55), inset 0 0 30px rgba(0,0,0,0.25);
+    transition: background .25s;
+    overflow:hidden;
+}
+.monitor-screen::after{ /* grade sutil */
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+        linear-gradient(rgba(0,0,0,0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.12) 1px, transparent 1px);
+    background-size:20px 20px;
+    pointer-events:none;
+}
+.monitor canvas{ position:absolute; inset:0; width:100%; height:100%; z-index:1; }
+.monitor-text{
+    position:absolute;
+    top:8px; right:12px;
+    z-index:2;
+    font-size:18px;
+    font-weight:700;
+    letter-spacing:2px;
+    color:var(--st-txt, #000);
+}
+.alarm{
+    position:absolute;
+    left:10px; bottom:8px;
+    z-index:2;
+    display:none;
+    color:var(--al-cor, #fff);
+    opacity:var(--al-op, 1);
+    animation: piscar 0.8s steps(1) infinite;
+}
+.alarm.on{ display:block; }
+.alarm.fixo{ animation:none; }
+@keyframes piscar{ 50%{ opacity:0.15; } }
+
+.spec .efeito{ margin-top:6px; }
+.spec .efeito b{ display:inline; margin:0; color:var(--red); letter-spacing:0.5px; text-transform:uppercase; }
+
+/* Inventário */
+.inventario{ list-style:none; margin:0; padding:0; }
+.inventario li{
+    position:relative;
+    padding:9px 0 9px 26px;
+    border-bottom:1px solid #330000;
+    font-size:13px;
+    line-height:1.5;
+    color:#ffcccc;
+}
+.inventario li::before{
+    content:"";
+    position:absolute;
+    left:2px; top:13px;
+    width:11px; height:11px;
+    background:var(--red);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.inventario .i-nome{ color:var(--red); font-weight:700; letter-spacing:0.5px; }
+.inventario .i-sub{ margin-top:4px; font-size:12px; opacity:0.9; }
+.inventario .i-sub b{ color:var(--red-soft); }
 
 @media (max-width: 600px) {
-    .grid {
-        grid-template-columns: 1fr !important;
-    }
+    .grid, .ficha { grid-template-columns: 1fr !important; }
+    #cel-atributos{ order:1; } #especialidades{ order:2; } #cel-status{ order:3; } #efeitos{ order:4; }
+}
+@media (prefers-reduced-motion: reduce){
+    .alarm{ animation:none; }
 }
 </style>
 </head>
@@ -231,7 +414,7 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     <div class="status-item"><div>SESSÃO</div><span class="leader"></span><span id="session"></span></div>
     <div class="status-item"><div>NÓ</div><span class="leader"></span><span>US-OR-01</span></div>
     <div class="status-item">
-        <div>LATÊNCIA</div> 
+        <div>LATÊNCIA</div>
         <span class="leader"></span>
         <span style="display:inline-flex; align-items: baseline;">
             <div class="signal-container">
@@ -244,6 +427,13 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     </div>
     <div class="status-item"><div>ACESSO</div><span class="leader"></span><span id="access-time"></span></div>
 </div>
+
+<!-- GUIAS: para criar uma terceira, copie um botão (data-tab="nome")
+     e uma <section class="tab-content" id="tab-nome"> -->
+<nav class="tabs" role="tablist">
+    <button class="tab-btn active" role="tab" data-tab="dossie">DOSSIÊ<small>档案</small></button>
+    <button class="tab-btn" role="tab" data-tab="inventario">INVENTÁRIO<small>库存</small></button>
+</nav>
 
 <div class="panel">
     <div class="corner tl"></div>
@@ -258,33 +448,395 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
         <div class="badge">SECRETO // 机密</div>
     </div>
 
-    <div class="grid">
-        <div class="photo"><img src="https://i.imgur.com/nuR2oYm.png" referrerpolicy="no-referrer" style="width:100%; height:100%; object-fit:cover;"></div>
-        <div>
-            <table>
-                <tr><td class="label">IDENTIFICADOR</td><td class="value">DE-09162019961114088F</td></tr>
-                <tr><td class="label">NOME</td><td class="value">ANSGAR HÖSSLER</td></tr>
-                <tr><td class="label">DATA DE NASCIMENTO</td><td class="value">14/11/1996</td></tr>
-                <tr><td class="label">ALTURA</td><td class="value">1.93 m</td></tr>
-                <tr><td class="label">TIPO SANGUÍNEO</td><td class="value">A+</td></tr>
-                <tr><td class="label">DATA DE TRANSFERÊNCIA</td><td class="value">20/04/2027</td></tr>
-            </table>
+    <!-- ===== GUIA 1: DOSSIÊ ===== -->
+    <section class="tab-content active" id="tab-dossie">
+        <div class="grid">
+            <div class="photo"><img src="https://i.imgur.com/nuR2oYm.png" alt="Foto de Ansgar Hössler" referrerpolicy="no-referrer" style="width:100%; height:100%; object-fit:cover;"></div>
+            <div>
+                <table>
+                    <tr><td class="label">IDENTIFICADOR</td><td class="value">DE-09162019961114088F</td></tr>
+                    <tr><td class="label">NOME</td><td class="value">ANSGAR HÖSSLER</td></tr>
+                    <tr><td class="label">DATA DE NASCIMENTO</td><td class="value">14/11/1996</td></tr>
+                    <tr><td class="label">ALTURA</td><td class="value">1.93 m</td></tr>
+                    <tr><td class="label">TIPO SANGUÍNEO</td><td class="value">A+</td></tr>
+                    <tr><td class="label">DATA DE TRANSFERÊNCIA</td><td class="value">20/04/2027</td></tr>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <div class="section">
-        <h3>PERFIL OPERACIONAL</h3>
-        <div class="box">
-            <p>Nascido na Baviera, Ansgar Hössler integrava o 8º Batalhão de Engenharia de Montanha (Gebirgspionierbataillon 8) da Bundeswehr quando a Grande Queda ocorreu em 2023. Com o colapso estrutural da Alemanha e o início do Inverno Nuclear, assinou contrato com a CIST como especialista EOD (Desativação de Artefatos Explosivos). Essa transferência ocorreu mediante um acordo de prestação de serviços para garantir cotas de suprimentos, eletricidade e medicação para sua esposa, confinada no Setor Administrativo de Berlim.</p>
-            <p>Durante o Inverno Nuclear, Fenrir foi alocado na desobstrução das principais rotas logísticas europeias. O operador executou a neutralização de campos minados improvisados por milícias locais que emboscavam comboios da CIST, e atuou na contenção física de infectados nas ruínas de Munique e Stuttgart. O trabalho contínuo em zonas de risco resultou em um incidente crítico em seu registro: durante a evacuação de um bunker civil, operando sob fogo de insurgentes, Hössler não detectou o estopim secundário de uma barricada sabotada. A detonação colapsou a estrutura sobre os civis e sua equipe de cobertura. Protegido pela blindagem pesada do traje EOD, Hössler foi o único sobrevivente no local.</p>
-            <p>O incidente no bunker alterou a execução de seus protocolos de campo. O operador passou a conduzir varreduras secundárias não-oficiais em perímetros já declarados limpos pelas equipes de vanguarda. Enquanto unidades de assalto priorizam engajamentos diretos contra facções e ameaças biológicas, Hössler retém o avanço para buscar ativamente portas com fio de tropeço, veículos modificados e anomalias estruturais subjacentes. Essa abordagem de escrutínio físico atrasa cronogramas táticos, resultando frequentemente na paralisação de comboios por horas para inspeções de terreno suspeito. O operador rotineiramente descarta ordens de avanço rápido caso não tenha verificado o trajeto pessoalmente.</p>
+        <div class="section">
+            <h3>PERFIL OPERACIONAL</h3>
+            <div class="box">
+                <p>Nascido na Baviera, Ansgar Hössler integrava o 8º Batalhão de Engenharia de Montanha (Gebirgspionierbataillon 8) da Bundeswehr quando a Grande Queda ocorreu em 2023. Com o colapso estrutural da Alemanha e o início do Inverno Nuclear, assinou contrato com a CIST como especialista EOD (Desativação de Artefatos Explosivos). Essa transferência ocorreu mediante um acordo de prestação de serviços para garantir cotas de suprimentos, eletricidade e medicação para sua esposa, confinada no Setor Administrativo de Berlim.</p>
+                <p>Durante o Inverno Nuclear, Fenrir foi alocado na desobstrução das principais rotas logísticas europeias. O operador executou a neutralização de campos minados improvisados por milícias locais que emboscavam comboios da CIST, e atuou na contenção física de infectados nas ruínas de Munique e Stuttgart. O trabalho contínuo em zonas de risco resultou em um incidente crítico em seu registro: durante a evacuação de um bunker civil, operando sob fogo de insurgentes, Hössler não detectou o estopim secundário de uma barricada sabotada. A detonação colapsou a estrutura sobre os civis e sua equipe de cobertura. Protegido pela blindagem pesada do traje EOD, Hössler foi o único sobrevivente no local.</p>
+                <p>O incidente no bunker alterou a execução de seus protocolos de campo. O operador passou a conduzir varreduras secundárias não-oficiais em perímetros já declarados limpos pelas equipes de vanguarda. Enquanto unidades de assalto priorizam engajamentos diretos contra facções e ameaças biológicas, Hössler retém o avanço para buscar ativamente portas com fio de tropeço, veículos modificados e anomalias estruturais subjacentes. Essa abordagem de escrutínio físico atrasa cronogramas táticos, resultando frequentemente na paralisação de comboios por horas para inspeções de terreno suspeito. O operador rotineiramente descarta ordens de avanço rápido caso não tenha verificado o trajeto pessoalmente.</p>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- ===== GUIA 2: INVENTÁRIO ===== -->
+    <section class="tab-content" id="tab-inventario">
+        <div class="ficha">
+            <div class="section" id="cel-atributos">
+                <h3>ATRIBUTOS</h3>
+                <div id="atributos"></div>
+            </div>
+
+            <div class="section col-status" id="cel-status">
+                <h3>STATUS</h3>
+                <div class="monitor">
+                    <div class="monitor-screen" id="monitor">
+                        <canvas id="ecg"></canvas>
+                        <div class="monitor-text" id="monitor-text"></div>
+                        <svg class="alarm" id="alarm" width="26" height="24" viewBox="0 0 26 24" aria-hidden="true">
+                            <polygon points="13,1 25,23 1,23" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <rect x="12" y="8" width="2" height="8" fill="currentColor"/>
+                            <rect x="12" y="18" width="2" height="2" fill="currentColor"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="vitais" id="vitais"></div>
+            </div>
+
+            <div class="spec" id="especialidades"></div>
+            <div class="spec" id="efeitos"></div>
+        </div>
+
+        <div class="divisor"></div>
+
+        <div class="section">
+            <h3>INVENTÁRIO</h3>
+            <ul class="inventario" id="inventario"></ul>
+        </div>
+    </section>
 </div>
 
 </div>
 
 <script>
+/* =====================================================================
+   FICHA DO PERSONAGEM — edite apenas este bloco
+   ===================================================================== */
+const FICHA = {
+
+    // valor = número do atributo | especial = bônus entre parênteses.
+    // especial: null => não aparece. Aceita número (2 => "(+2)", -1 => "(-1)").
+    atributos: {
+        'FÍSICO':  { valor: 5, especial: null },
+        'TÁTICO':  { valor: 4, especial: null },
+        'TÉCNICO': { valor: 1, especial: null },
+        'MENTAL':  { valor: 3, especial: null },
+        'SOCIAL':  { valor: 2, especial: null }
+    },
+    vigor:      { valor: 5, especial: null },
+    velocidade: { valor: 3, especial: null },
+
+    // atual / max de cada barra
+    vitais: {
+        saude:   { atual: 100, max: 100 },
+        energia: { atual: 100, max: 100 },
+        sede:    { atual: 100, max: 100 }
+    },
+
+    especialidades: "[Inserir especialidades do personagem.]",
+
+    // O estado do monitor é automático: depende da SAÚDE (vitais.saude).
+    // 80-100 NOMINAL | 51-79 ATENÇÃO | 27-50 ALERTA | 11-26 PERIGO | 1-10 CRÍTICO | 0 "--"
+
+    // Deixe vazio [] se não houver efeitos.
+    // ocultarEfeitosVazio: false => a caixa aparece com "Nenhum." | true => a caixa some.
+    ocultarEfeitosVazio: false,
+    efeitos: [
+        // { nome: "Sangramento", desc: "Perde 1 de vigor por rodada." }
+    ],
+
+    // Um item por linha. Item simples: "texto" | Item com sublinhas: { nome: "...", linhas: ["Título: descrição"] }
+    inventario: [
+        { nome: "Benelli M4", linhas: [
+            "Baleira Lateral: Recarregar não consome VIGOR.",
+            "Extensão de Carregador: 9+1 cartuchos.",
+            "Lanterna UV: Auto-explicativo.",
+            "Lanterna Tática: Auto-explicativo.",
+            "Pichação laranja no bocal"
+        ]},
+        { nome: "CZ P-10", linhas: [
+            "Compensador: Concede 1 Boon em disparos."
+        ]},
+        "29 cartuchos de Chumbo Grosso",
+        "20 Balotes",
+        "3 Carregadores de 9x19mm",
+        "3x Granadas de Fragmentação",
+        "3x Granadas de Fumaça",
+        "3 Cargas de Explosivo Plástico + Detonador",
+        "1 Kit de Desarme EOD",
+        "Trapos enrolados nas mãos e punhos",
+        "Capacete Inteligente MUNNIN-50B",
+        "Cantil de água",
+        "Faca",
+        "IFAK"
+    ]
+};
+
+/* Estado do monitor, definido pela SAÚDE (em % da saúde máxima; com max 100 é o próprio valor).
+   min   = menor % que ainda pertence ao nível (checados do maior para o menor)
+   ciclo = largura de um ciclo (px) | batidas = posições das batidas no ciclo
+   amp   = altura da onda | esc = achatamento horizontal da batida (menor = mais fina)
+   alarme: 'pisca' = triângulo laranja piscando | 'fixo' = branco, sem piscar */
+const STATUS_NIVEIS = [
+    { min:80,        cor:"#1fb5e8", texto:"NOMINAL", ciclo:260, batidas:[0],     vel:90,  amp:1,   esc:1 },
+    { min:51,        cor:"#f2c200", texto:"ATENÇÃO", ciclo:300, batidas:[0,110], vel:100, amp:1,   esc:1 },
+    { min:27,        cor:"#f28c14", texto:"ALERTA",  ciclo:140, batidas:[0],     vel:125, amp:1,   esc:1,    alarme:"pisca" },
+    { min:11,        cor:"#f0501a", texto:"PERIGO",  ciclo:85,  batidas:[0],     vel:140, amp:1,   esc:1,    alarme:"pisca" },
+    { min:1,         cor:"#9a1010", texto:"CRÍTICO", ciclo:36,  batidas:[0],     vel:150, amp:0.5, esc:0.35, alarme:"fixo"  },
+    { min:-Infinity, cor:"#9a1010", texto:"--",      estatico:true }
+];
+const TEXTO_COR = "#000";
+const ALARME = {
+    pisca: { cor:"#ffb98a", op:0.8 },   // laranja claro, pouco saturado
+    fixo:  { cor:"#ffffff", op:1 }      // branco intenso
+};
+/* ===================================================================== */
+
+
+/* ---------- Ícones (SVG de traço, herdam a cor do texto) ---------- */
+function svg(path){
+    return '<svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + path + '</svg>';
+}
+const ICONES = {
+    'FÍSICO':     '<path d="M3 8v4M5.5 6v8M14.5 6v8M17 8v4M5.5 10h9"/>',
+    'TÁTICO':     '<circle cx="10" cy="10" r="5.5"/><path d="M10 1.5v5M10 13.5v5M1.5 10h5M13.5 10h5"/><circle cx="10" cy="10" r="1.3" fill="currentColor" stroke="none"/>',
+    'TÉCNICO':    '<circle cx="10" cy="10" r="3"/><circle cx="10" cy="10" r="6"/><path d="M10 1.5v2.5M10 16v2.5M1.5 10H4M16 10h2.5M4 4l1.8 1.8M14.2 14.2L16 16M16 4l-1.8 1.8M5.8 14.2L4 16"/>',
+    'MENTAL':     '<path d="M10 4C8.5 2.5 6 2.8 5 4.6 3.3 4.8 2.5 6.6 3.2 8 2 9.2 2.2 11 3.4 11.8 3.2 13.6 4.6 15 6.3 14.8 7 16.2 9 16.5 10 15.2"/><path d="M10 4c1.5-1.5 4-1.2 5 .6 1.7.2 2.5 2 1.8 3.4 1.2 1.2 1 3-.2 3.8.2 1.8-1.2 3.2-2.9 3-.7 1.4-2.7 1.7-3.7.4"/><path d="M10 4v11.2M10 15.2v2.3"/><path d="M5 4.6c1.2.2 2 1 2.3 2M3.4 11.8c1.3-.1 2.3-.8 2.7-1.8M6.3 14.8c.2-1.2 1-2 2.2-2.2M15 4.6c-1.2.2-2 1-2.3 2M16.6 11.8c-1.3-.1-2.3-.8-2.7-1.8M13.7 14.8c-.2-1.2-1-2-2.2-2.2"/>',
+    'SOCIAL':     '<circle cx="7" cy="7" r="2.6"/><path d="M2 16c0-3 2.2-5 5-5s5 2 5 5"/><circle cx="14" cy="8" r="2.2"/><path d="M13.5 11.2c2.6-.2 4.5 1.6 4.5 4.3"/>',
+    'VIGOR':      '<path d="M10 1.5c.9 3.2 4.8 5.2 4.8 9.7a4.8 4.8 0 0 1-9.6 0c0-2.1 1.1-3.6 2.1-4.7.2 1.5 1 2.3 1.8 2.6C9 6.8 9.1 4 10 1.5z"/><path d="M10 15.2a2.1 2.1 0 0 1-2.1-2.1c0-1.3.9-2 2.1-3.4 1.2 1.4 2.1 2.1 2.1 3.4a2.1 2.1 0 0 1-2.1 2.1z"/>',
+    'VELOCIDADE': '<path d="M4 4l6 6-6 6M10 4l6 6-6 6"/>'
+};
+const VITAIS = [
+    { chave:'saude',   nome:'SAÚDE',   cor:'#7dff9b', icone:'<path d="M10 1.5v17M2.64 5.75l14.72 8.5M2.64 14.25l14.72-8.5" stroke-width="3" stroke-linecap="butt"/>' },
+    { chave:'energia', nome:'ENERGIA', cor:'#ffd83a', icone:'<path fill="currentColor" d="M11.5 1.5L4.5 11h5l-1 7.5L15.5 9h-5z"/>' },
+    { chave:'sede',    nome:'SEDE',    cor:'#3aa8ff', icone:'<path fill="currentColor" d="M10 2C10 2 4.5 8 4.5 12a5.5 5.5 0 0 0 11 0C15.5 8 10 2 10 2z"/>' }
+];
+
+/* ---------- Atributos ---------- */
+function linhaAtributo(nome, dado){
+    const row = document.createElement('div');
+    row.className = 'attr';
+
+    if(ICONES[nome]){
+        const ic = document.createElement('span');
+        ic.className = 'a-ico';
+        ic.innerHTML = svg(ICONES[nome]);   // conteúdo fixo definido acima
+        row.appendChild(ic);
+    }
+
+    const n = document.createElement('span');
+    n.className = 'a-name';
+    n.textContent = nome;
+
+    const l = document.createElement('span');
+    l.className = 'leader';
+
+    const v = document.createElement('span');
+    v.className = 'a-val';
+    v.textContent = dado.valor;
+
+    const esp = dado.especial;
+    if(esp !== null && esp !== undefined && esp !== ''){
+        const em = document.createElement('em');
+        const txt = (typeof esp === 'number' && esp > 0) ? '+' + esp : String(esp);
+        em.textContent = '(' + txt + ')';
+        v.appendChild(em);
+    }
+
+    row.append(n, l, v);
+    return row;
+}
+
+(function renderFicha(){
+    const cont = document.getElementById('atributos');
+    Object.keys(FICHA.atributos).forEach(k=>{
+        cont.appendChild(linhaAtributo(k, FICHA.atributos[k]));
+    });
+    const sep = document.createElement('div');
+    sep.className = 'attr-sep';
+    cont.appendChild(sep);
+    cont.appendChild(linhaAtributo('VIGOR', FICHA.vigor));
+    cont.appendChild(linhaAtributo('VELOCIDADE', FICHA.velocidade));
+
+    /* Especialidades */
+    const spec = document.getElementById('especialidades');
+    const b = document.createElement('b');
+    b.textContent = 'ESPECIALIDADES:';
+    spec.append(b, document.createTextNode(FICHA.especialidades));
+
+    /* Vitais */
+    const vit = document.getElementById('vitais');
+    VITAIS.forEach(def=>{
+        const d = FICHA.vitais[def.chave];
+        const pct = Math.max(0, Math.min(100, (d.atual / d.max) * 100));
+        const row = document.createElement('div');
+        row.className = 'vital';
+        row.style.setProperty('--vc', def.cor);
+        row.innerHTML =
+            '<span class="v-ico">' + svg(def.icone) + '</span>' +
+            '<span class="v-name">' + def.nome + '</span>' +
+            '<span class="v-bar"><i style="width:' + pct + '%"></i></span>' +
+            '<span class="v-num">' + Number(d.atual) + '/' + Number(d.max) + '</span>';
+        vit.appendChild(row);
+    });
+
+    /* Efeitos: só aparece se houver algum */
+    const ef = document.getElementById('efeitos');
+    if(!FICHA.efeitos.length && FICHA.ocultarEfeitosVazio){
+        ef.remove();
+    } else {
+        const h = document.createElement('b');
+        h.textContent = 'EFEITOS DE STATUS:';
+        ef.appendChild(h);
+        if(!FICHA.efeitos.length) ef.appendChild(document.createTextNode('Nenhum.'));
+        FICHA.efeitos.forEach(e=>{
+            const d = document.createElement('div');
+            d.className = 'efeito';
+            const nb = document.createElement('b');
+            nb.textContent = e.nome + ':';
+            d.append(nb, document.createTextNode(' ' + e.desc));
+            ef.appendChild(d);
+        });
+    }
+
+    /* Inventário: string simples ou { nome, linhas } */
+    const inv = document.getElementById('inventario');
+    FICHA.inventario.forEach(item=>{
+        const li = document.createElement('li');
+        if(typeof item === 'string'){
+            li.textContent = item;
+        } else {
+            const nm = document.createElement('span');
+            nm.className = 'i-nome';
+            nm.textContent = item.nome;
+            li.appendChild(nm);
+            (item.linhas || []).forEach(txt=>{
+                const d = document.createElement('div');
+                d.className = 'i-sub';
+                const i = txt.indexOf(':');
+                if(i > -1){
+                    const bb = document.createElement('b');
+                    bb.textContent = txt.slice(0, i + 1);
+                    d.append(bb, document.createTextNode(txt.slice(i + 1)));
+                } else {
+                    d.textContent = txt;
+                }
+                li.appendChild(d);
+            });
+        }
+        inv.appendChild(li);
+    });
+})();
+
+
+/* ---------- Monitor de batimentos (estilo Signalis) ---------- */
+(function monitor(){
+    const sd = FICHA.vitais.saude;
+    const pct = sd.max > 0 ? Math.round(Math.max(0, Math.min(100, (sd.atual / sd.max) * 100))) : 0;
+    const nivel = STATUS_NIVEIS.find(n => pct >= n.min);
+
+    const screen = document.getElementById('monitor');
+    const canvas = document.getElementById('ecg');
+    const ctx = canvas.getContext('2d');
+
+    screen.style.setProperty('--st-cor', nivel.cor);
+    screen.style.setProperty('--st-txt', TEXTO_COR);
+    document.getElementById('monitor-text').textContent = nivel.texto;
+
+    if(nivel.alarme){
+        const al = document.getElementById('alarm');
+        const a = ALARME[nivel.alarme];
+        al.style.setProperty('--al-cor', a.cor);
+        al.style.setProperty('--al-op', a.op);
+        al.classList.add('on');
+        if(nivel.alarme === 'fixo') al.classList.add('fixo');
+    }
+
+    let W = 0, H = 0;
+    function resize(){
+        const r = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        W = r.width; H = r.height;
+        if(!W || !H) return;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener('resize', resize);
+
+    // Forma de uma batida: só retas, como um ECG de monitor.
+    // [dx, dy] = deslocamento horizontal (px) em relação ao pico R e altura relativa.
+    const FORMA = [
+        [-44, 0], [-40, 0.15], [-35, 0],      // onda P (pequeno triângulo)
+        [-9, 0], [-6, -0.12],                  // Q (pequeno entalhe)
+        [0, 1],                                // R (pico agudo)
+        [4, -0.55],                            // S (vale)
+        [8, 0],
+        [30, 0], [36, 0.16], [42, 0]           // onda T
+    ];
+
+    // Vértices da linha visível; cada batida é desenhada ponto a ponto, sem suavização.
+    function pontos(offset){
+        const c = nivel.ciclo, esc = nivel.esc || 1, amp = nivel.amp || 1;
+        const k0 = Math.floor((offset - 60) / c) - 1;
+        const k1 = Math.ceil((offset + W + 60) / c) + 1;
+        const pts = [];
+        for(let k = k0; k <= k1; k++){
+            nivel.batidas.forEach((pos, i)=>{
+                const esq = i === 0 ? 1 : 0.75;
+                FORMA.forEach(([dx, dy])=>{
+                    pts.push([k * c + pos + dx * esc, dy * esq * amp]);
+                });
+            });
+        }
+        return pts.sort((a, b) => a[0] - b[0]);
+    }
+
+    let offset = 0, ultimo = null;
+    const reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function frame(t){
+        if(ultimo === null) ultimo = t;
+        const dt = (t - ultimo)/1000;
+        ultimo = t;
+        if(!nivel.estatico && !reduzir) offset += nivel.vel * dt;
+
+        if(W && H){
+            ctx.clearRect(0, 0, W, H);
+            const base = H * 0.62, amp = H * 0.42;
+            ctx.beginPath();
+            if(nivel.estatico){
+                ctx.moveTo(0, base);
+                ctx.lineTo(W, base);
+            } else {
+                pontos(offset).forEach(([x, y], n)=>{
+                    if(n === 0) ctx.moveTo(x - offset, base - y*amp);
+                    else ctx.lineTo(x - offset, base - y*amp);
+                });
+            }
+            ctx.lineWidth = 2.5;
+            ctx.lineJoin = 'miter';
+            ctx.miterLimit = 3;
+            ctx.strokeStyle = '#fff';
+            ctx.shadowColor = 'rgba(255,255,255,0.7)';
+            ctx.shadowBlur = 6;
+            ctx.stroke();
+        }
+        requestAnimationFrame(frame);
+    }
+
+    resize();
+    window.__resizeEcg = resize;   // chamado ao trocar de guia
+    requestAnimationFrame(frame);
+})();
+
+
+/* ---------- Cabeçalho ---------- */
 function gen(){
     function getChar(type) {
         const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -301,7 +853,7 @@ function gen(){
         }
         return res;
     }
-    
+
     const session = `CIST-${part()}-${part()}-${part()}`;
     document.getElementById("session").innerText = session;
 }
@@ -339,21 +891,25 @@ updateLatency();
 setAccessTime();
 setInterval(updateLatency, 5000);
 
+
+/* ---------- Scanner (acompanha a altura do painel, em qualquer guia) ---------- */
+let atualizarScan = function(){};
 (function(){
     const scanEl = document.querySelector('.scan');
-    const boxEl = document.querySelector('.box');
+    const endEl = document.querySelector('.panel');
     const scanHeight = 150;
     const speed = (window.innerHeight * 1.1 + 200) / 6;
     const fadeDistance = 250;
     let docHeight = document.documentElement.scrollHeight;
-    let boxBottom = boxEl ? boxEl.offsetTop + boxEl.offsetHeight : docHeight;
+    let panelBottom = endEl.getBoundingClientRect().bottom + window.scrollY;
     let pos = -scanHeight;
     let lastTime = null;
 
     function updateDocHeight(){
         docHeight = document.documentElement.scrollHeight;
-        if(boxEl) boxBottom = boxEl.offsetTop + boxEl.offsetHeight;
+        panelBottom = endEl.getBoundingClientRect().bottom + window.scrollY;
     }
+    atualizarScan = updateDocHeight;
     window.addEventListener('resize', updateDocHeight);
 
     function step(timestamp){
@@ -368,19 +924,30 @@ setInterval(updateLatency, 5000);
         }
 
         let opacity = 1;
-        if(boxEl && pos > boxBottom){
-            opacity = Math.max(0, 1 - (pos - boxBottom) / fadeDistance);
+        if(pos > panelBottom){
+            opacity = Math.max(0, 1 - (pos - panelBottom) / fadeDistance);
         }
 
-        scanEl.style.transform = `translateY(${pos}px)`;
+        scanEl.style.transform = 'translateY(' + pos + 'px)';
         scanEl.style.opacity = opacity;
         requestAnimationFrame(step);
     }
-
     requestAnimationFrame(step);
+})();
 
-    const observer = new MutationObserver(updateDocHeight);
-    observer.observe(document.body, { childList: true, subtree: true });
+
+/* ---------- Guias ---------- */
+(function tabs(){
+    const botoes = document.querySelectorAll('.tab-btn');
+    const secoes = document.querySelectorAll('.tab-content');
+
+    function abrir(nome){
+        botoes.forEach(b => b.classList.toggle('active', b.dataset.tab === nome));
+        secoes.forEach(s => s.classList.toggle('active', s.id === 'tab-' + nome));
+        if(window.__resizeEcg) window.__resizeEcg();
+        atualizarScan();
+    }
+    botoes.forEach(b => b.addEventListener('click', () => abrir(b.dataset.tab)));
 })();
 </script>
 

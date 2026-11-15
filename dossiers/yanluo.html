@@ -391,6 +391,9 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     background:var(--red);
     clip-path: polygon(0 0, 100% 0, 0 100%);
 }
+.inventario .i-nome{ color:var(--red); font-weight:700; letter-spacing:0.5px; }
+.inventario .i-sub{ margin-top:4px; font-size:12px; opacity:0.9; }
+.inventario .i-sub b{ color:var(--red-soft); }
 
 @media (max-width: 600px) {
     .grid, .ficha { grid-template-columns: 1fr !important; }
@@ -547,9 +550,11 @@ const FICHA = {
         // { nome: "Sangramento", desc: "Perde 1 de vigor por rodada." }
     ],
 
-    // Um item por linha.
+    // Um item por linha. Item simples: "texto" | Item com sublinhas: { nome: "...", linhas: ["Título: descrição"] }
     inventario: [
-        "AK-203 c/GP-46",
+        { nome: "AK-203", linhas: [
+            "Lança-Granadas: Modelo GP-46. Compatível com granadas 40×46 mm NATO LV (1 granada em uso)."
+        ]},
         "5x Carregadores de 30 AP 7.62x39 (147 cartuchos)",
         "2x 40mm HE",
         "3x 40mm Fumaça",
@@ -691,11 +696,31 @@ function linhaAtributo(nome, dado){
         });
     }
 
-    /* Inventário */
+    /* Inventário: string simples ou { nome, linhas } */
     const inv = document.getElementById('inventario');
     FICHA.inventario.forEach(item=>{
         const li = document.createElement('li');
-        li.textContent = item;
+        if(typeof item === 'string'){
+            li.textContent = item;
+        } else {
+            const nm = document.createElement('span');
+            nm.className = 'i-nome';
+            nm.textContent = item.nome;
+            li.appendChild(nm);
+            (item.linhas || []).forEach(txt=>{
+                const d = document.createElement('div');
+                d.className = 'i-sub';
+                const i = txt.indexOf(':');
+                if(i > -1){
+                    const bb = document.createElement('b');
+                    bb.textContent = txt.slice(0, i + 1);
+                    d.append(bb, document.createTextNode(txt.slice(i + 1)));
+                } else {
+                    d.textContent = txt;
+                }
+                li.appendChild(d);
+            });
+        }
         inv.appendChild(li);
     });
 })();

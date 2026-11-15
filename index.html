@@ -360,9 +360,12 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
     left:10px; bottom:8px;
     z-index:2;
     display:none;
+    color:var(--al-cor, #fff);
+    opacity:var(--al-op, 1);
     animation: piscar 0.8s steps(1) infinite;
 }
 .alarm.on{ display:block; }
+.alarm.fixo{ animation:none; }
 @keyframes piscar{ 50%{ opacity:0.15; } }
 
 .spec .efeito{ margin-top:6px; }
@@ -479,9 +482,9 @@ td{ padding:10px 0; border-bottom:1px solid #330000; }
                         <canvas id="ecg"></canvas>
                         <div class="monitor-text" id="monitor-text"></div>
                         <svg class="alarm" id="alarm" width="26" height="24" viewBox="0 0 26 24" aria-hidden="true">
-                            <polygon points="13,1 25,23 1,23" fill="none" stroke="#fff" stroke-width="2"/>
-                            <rect x="12" y="8" width="2" height="8" fill="#fff"/>
-                            <rect x="12" y="18" width="2" height="2" fill="#fff"/>
+                            <polygon points="13,1 25,23 1,23" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <rect x="12" y="8" width="2" height="8" fill="currentColor"/>
+                            <rect x="12" y="18" width="2" height="2" fill="currentColor"/>
                         </svg>
                     </div>
                 </div>
@@ -530,9 +533,8 @@ const FICHA = {
 
     especialidades: "Texto das especialidades do personagem.",
 
-    // 1 = NOMINAL (ciano) | 2 = amarelo | 3 = GRAVE (laranja)
-    // 4 = CRÍTICO (vermelho + alarme) | 5 = N/A (linha estática)
-    status: 1,
+    // O estado do monitor é automático: depende da SAÚDE (vitais.saude).
+    // 80-100 NOMINAL | 40-79 ATENÇÃO | 27-39 ALERTA | 11-26 PERIGO | 1-10 CRÍTICO | 0 "--"
 
     // Deixe vazio [] se não houver efeitos.
     // ocultarEfeitosVazio: false => a caixa aparece com "Nenhum." | true => a caixa some.
@@ -548,14 +550,23 @@ const FICHA = {
     ]
 };
 
-/* Aparência de cada nível de status.
-   batidas = posições (px) das batidas dentro de um ciclo | ciclo = largura do ciclo (px) */
-const STATUS_NIVEIS = {
-    1: { cor:"#1fb5e8", txt:"#000", texto:"NOMINAL",    ciclo:260, batidas:[0],      vel:90,  alarme:false, estatico:false },
-    2: { cor:"#e8c21f", txt:"#000", texto:"TEXTO 2",    ciclo:300, batidas:[0,110],  vel:100, alarme:false, estatico:false },
-    3: { cor:"#f26a1b", txt:"#fff", texto:"GRAVE",      ciclo:130, batidas:[0],      vel:130, alarme:false, estatico:false },
-    4: { cor:"#6e0a0a", txt:"#fff", texto:"CRÍTICO",    ciclo:80,  batidas:[0],      vel:150, alarme:true,  estatico:false },
-    5: { cor:"#6e0a0a", txt:"#fff", texto:"N/A",        ciclo:80,  batidas:[],       vel:0,   alarme:false, estatico:true  }
+/* Estado do monitor, definido pela SAÚDE (em % da saúde máxima; com max 100 é o próprio valor).
+   min   = menor % que ainda pertence ao nível (checados do maior para o menor)
+   ciclo = largura de um ciclo (px) | batidas = posições das batidas no ciclo
+   amp   = altura da onda | esc = achatamento horizontal da batida (menor = mais fina)
+   alarme: 'pisca' = triângulo laranja piscando | 'fixo' = branco, sem piscar */
+const STATUS_NIVEIS = [
+    { min:80,        cor:"#1fb5e8", texto:"NOMINAL", ciclo:260, batidas:[0],     vel:90,  amp:1,   esc:1 },
+    { min:40,        cor:"#f2c200", texto:"ATENÇÃO", ciclo:300, batidas:[0,110], vel:100, amp:1,   esc:1 },
+    { min:27,        cor:"#f28c14", texto:"ALERTA",  ciclo:140, batidas:[0],     vel:125, amp:1,   esc:1,    alarme:"pisca" },
+    { min:11,        cor:"#f0501a", texto:"PERIGO",  ciclo:85,  batidas:[0],     vel:140, amp:1,   esc:1,    alarme:"pisca" },
+    { min:1,         cor:"#9a1010", texto:"CRÍTICO", ciclo:36,  batidas:[0],     vel:150, amp:0.5, esc:0.35, alarme:"fixo"  },
+    { min:-Infinity, cor:"#9a1010", texto:"--",      estatico:true }
+];
+const TEXTO_COR = "#000";
+const ALARME = {
+    pisca: { cor:"#ffb98a", op:0.8 },   // laranja claro, pouco saturado
+    fixo:  { cor:"#ffffff", op:1 }      // branco intenso
 };
 /* ===================================================================== */
 
@@ -678,15 +689,26 @@ function linhaAtributo(nome, dado){
 
 /* ---------- Monitor de batimentos (estilo Signalis) ---------- */
 (function monitor(){
-    const nivel = STATUS_NIVEIS[FICHA.status] || STATUS_NIVEIS[1];
+    const sd = FICHA.vitais.saude;
+    const pct = sd.max > 0 ? Math.round(Math.max(0, Math.min(100, (sd.atual / sd.max) * 100))) : 0;
+    const nivel = STATUS_NIVEIS.find(n => pct >= n.min);
+
     const screen = document.getElementById('monitor');
     const canvas = document.getElementById('ecg');
     const ctx = canvas.getContext('2d');
 
     screen.style.setProperty('--st-cor', nivel.cor);
-    screen.style.setProperty('--st-txt', nivel.txt);
+    screen.style.setProperty('--st-txt', TEXTO_COR);
     document.getElementById('monitor-text').textContent = nivel.texto;
-    if(nivel.alarme) document.getElementById('alarm').classList.add('on');
+
+    if(nivel.alarme){
+        const al = document.getElementById('alarm');
+        const a = ALARME[nivel.alarme];
+        al.style.setProperty('--al-cor', a.cor);
+        al.style.setProperty('--al-op', a.op);
+        al.classList.add('on');
+        if(nivel.alarme === 'fixo') al.classList.add('fixo');
+    }
 
     let W = 0, H = 0;
     function resize(){
@@ -704,6 +726,7 @@ function linhaAtributo(nome, dado){
 
     // formato de uma batida; d = distância (px) do pico R
     function batida(d){
+        d = d / (nivel.esc || 1);
         return g(d+34, 9, 0.10)    // P
              + g(d+7,  2.5, -0.14) // Q
              + g(d,    2.8, 1.00)  // R
@@ -719,7 +742,7 @@ function linhaAtributo(nome, dado){
             if(d > c/2) d -= c;
             y += batida(d) * (i === 0 ? 1 : 0.75);
         });
-        return y;
+        return y * (nivel.amp || 1);
     }
 
     let offset = 0, ultimo = null;

@@ -722,27 +722,32 @@ function linhaAtributo(nome, dado){
     }
     window.addEventListener('resize', resize);
 
-    const g = (d, s, a) => a * Math.exp(-(d*d) / (2*s*s));
+    // Forma de uma batida: só retas, como um ECG de monitor.
+    // [dx, dy] = deslocamento horizontal (px) em relação ao pico R e altura relativa.
+    const FORMA = [
+        [-44, 0], [-40, 0.15], [-35, 0],      // onda P (pequeno triângulo)
+        [-9, 0], [-6, -0.12],                  // Q (pequeno entalhe)
+        [0, 1],                                // R (pico agudo)
+        [4, -0.55],                            // S (vale)
+        [8, 0],
+        [30, 0], [36, 0.16], [42, 0]           // onda T
+    ];
 
-    // formato de uma batida; d = distância (px) do pico R
-    function batida(d){
-        d = d / (nivel.esc || 1);
-        return g(d+34, 9, 0.10)    // P
-             + g(d+7,  2.5, -0.14) // Q
-             + g(d,    2.8, 1.00)  // R
-             + g(d-7,  3,  -0.28)  // S
-             + g(d-34, 11, 0.22);  // T
-    }
-
-    function valor(wx){
-        const c = nivel.ciclo;
-        let y = 0;
-        nivel.batidas.forEach((pos, i)=>{
-            let d = (((wx - pos) % c) + c) % c;
-            if(d > c/2) d -= c;
-            y += batida(d) * (i === 0 ? 1 : 0.75);
-        });
-        return y * (nivel.amp || 1);
+    // Vértices da linha visível; cada batida é desenhada ponto a ponto, sem suavização.
+    function pontos(offset){
+        const c = nivel.ciclo, esc = nivel.esc || 1, amp = nivel.amp || 1;
+        const k0 = Math.floor((offset - 60) / c) - 1;
+        const k1 = Math.ceil((offset + W + 60) / c) + 1;
+        const pts = [];
+        for(let k = k0; k <= k1; k++){
+            nivel.batidas.forEach((pos, i)=>{
+                const esq = i === 0 ? 1 : 0.75;
+                FORMA.forEach(([dx, dy])=>{
+                    pts.push([k * c + pos + dx * esc, dy * esq * amp]);
+                });
+            });
+        }
+        return pts.sort((a, b) => a[0] - b[0]);
     }
 
     let offset = 0, ultimo = null;
@@ -758,12 +763,18 @@ function linhaAtributo(nome, dado){
             ctx.clearRect(0, 0, W, H);
             const base = H * 0.62, amp = H * 0.42;
             ctx.beginPath();
-            for(let x = 0; x <= W; x += 1){
-                const y = nivel.estatico ? 0 : valor(x + offset);
-                if(x === 0) ctx.moveTo(x, base - y*amp); else ctx.lineTo(x, base - y*amp);
+            if(nivel.estatico){
+                ctx.moveTo(0, base);
+                ctx.lineTo(W, base);
+            } else {
+                pontos(offset).forEach(([x, y], n)=>{
+                    if(n === 0) ctx.moveTo(x - offset, base - y*amp);
+                    else ctx.lineTo(x - offset, base - y*amp);
+                });
             }
             ctx.lineWidth = 2.5;
-            ctx.lineJoin = 'round';
+            ctx.lineJoin = 'miter';
+            ctx.miterLimit = 3;
             ctx.strokeStyle = '#fff';
             ctx.shadowColor = 'rgba(255,255,255,0.7)';
             ctx.shadowBlur = 6;
